@@ -51,6 +51,24 @@ DC gain error          2.9e-08 worst case
 round-trip SNR         147.7 dB  (44100 -> 48000 -> 44100)
 ```
 
+## Analyzing a filter before converting anything
+
+`Analyze` measures the exact filter `New` would build for a rate pair and
+quality, so presets can be compared on high-frequency loss and alias
+rejection without a single audio sample:
+
+```go
+rep, err := resample.Analyze(44100, 48000, resample.Balanced, resample.Bands{})
+```
+
+The report gives the passband's maximum ripple, the stopband's minimum
+attenuation, the taps per output sample and the compensated delay. The
+response is computed by a bounded-size FFT of the prototype coefficients,
+so the result is deterministic and capped in cost. The measured frequency
+ranges default to the passband and stopband implied by the quality's
+transition width; pass explicit `Bands` to measure custom ranges, and any
+band outside the higher Nyquist or an empty or inverted band is an error.
+
 ## The delay detail that matters
 
 The prototype filter's length is chosen as `2·d·l + 1`, so its centre falls

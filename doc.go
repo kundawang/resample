@@ -43,4 +43,15 @@
 // meet them. The Fast, Balanced, HighQuality and Archival presets are
 // starting points. Cost scales roughly with attenuation over transition
 // width, so halving the transition band doubles the work.
+//
+// # Analysis
+//
+// Analyze reports the filter a conversion actually uses, without processing
+// any audio: the passband's maximum ripple, the stopband's minimum
+// attenuation, the tap count and the compensated delay. The figures come
+// from a bounded-size FFT of the exact prototype coefficients New builds,
+// so they are deterministic and never depend on the signal. Default
+// passband and stopband limits follow the quality's transition band; pass
+// explicit Bands to measure different frequency ranges, for example to
+// compare presets only over the band a project uses.
 package resample

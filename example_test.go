@@ -50,3 +50,22 @@ func ExampleNew_streaming() {
 	// ratio 160/147, 259 taps per output sample, 129 samples of delay
 	// 44032 input samples produced 48068 output samples
 }
+
+func ExampleAnalyze() {
+	// Compare two presets for the same conversion without processing audio.
+	// The zero Bands value selects the default passband and stopband derived
+	// from the quality's transition width.
+	for _, q := range []resample.Quality{resample.Fast, resample.Balanced, resample.HighQuality} {
+		rep, err := resample.Analyze(44100, 48000, q, resample.Bands{})
+		if err != nil {
+			panic(err)
+		}
+		fmt.Printf("ripple %.4f dB, attenuation %.1f dB, %d taps, %d samples delay\n",
+			rep.PassbandRippleDB, rep.StopbandAttenuationDB, rep.Taps, rep.Delay)
+	}
+
+	// Output:
+	// ripple 0.0007 dB, attenuation 86.3 dB, 103 taps, 51 samples delay
+	// ripple 0.0001 dB, attenuation 106.2 dB, 259 taps, 129 samples delay
+	// ripple 0.0001 dB, attenuation 126.2 dB, 783 taps, 391 samples delay
+}

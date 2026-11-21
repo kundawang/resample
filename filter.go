@@ -42,10 +42,12 @@ var (
 )
 
 func (q Quality) validate() error {
-	if q.Attenuation < 20 || q.Attenuation > 200 {
+	if math.IsNaN(q.Attenuation) || math.IsInf(q.Attenuation, 0) ||
+		q.Attenuation < 20 || q.Attenuation > 200 {
 		return fmt.Errorf("resample: attenuation %g dB out of range [20, 200]", q.Attenuation)
 	}
-	if q.Transition <= 0 || q.Transition >= 1 {
+	if math.IsNaN(q.Transition) || math.IsInf(q.Transition, 0) ||
+		q.Transition <= 0 || q.Transition >= 1 {
 		return fmt.Errorf("resample: transition %g out of range (0, 1)", q.Transition)
 	}
 	return nil
